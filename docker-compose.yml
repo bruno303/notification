@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  mongodb:
+    container_name: "notification_mongodb"
+    image: mongo:6-jammy
+    ports:
+      - '27017:27017'
+
+  localstack:
+    container_name: "notification_localstack"
+    image: localstack/localstack:2.1.0
+    ports:
+      - "4566:4566"
+    volumes:
+      - "./etc/localstack/init-aws.sh:/etc/localstack/init/ready.d/init-aws.sh"

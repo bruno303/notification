@@ -1,0 +1,10 @@
+app:
+  datasource:
+    mongodb:
+      url: mongodb://localhost:27017/notification
+  aws:
+    sqs:
+      endpoint: ${SQS_ENDPOINT:http://localhost:4566}
+      configs:
+        - queue: notification-send-notification
+          handler: SendNotificationHandler
