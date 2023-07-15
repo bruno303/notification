@@ -8,3 +8,7 @@ app:
       configs:
         - queue: notification-send-notification
           handler: SendNotificationHandler
+
+logging:
+  level:
+    com.bso.notification.infra.sqs: INFO

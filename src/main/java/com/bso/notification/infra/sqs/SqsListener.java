@@ -19,6 +19,7 @@ public class SqsListener {
     private final SqsAsyncClient sqsAsyncClient;
     private final MessageHandler handler;
     private final String queueUrl;
+    private Boolean active = true;
 
     public SqsListener(SqsAsyncClient sqsAsyncClient, MessageHandler handler, String queueName) {
         this.sqsAsyncClient = sqsAsyncClient;
@@ -28,6 +29,10 @@ public class SqsListener {
 
     public void listen() {
         LOGGER.info("Starting listener for queue {}", queueUrl);
+        launchProducer();
+    }
+
+    private void launchProducer() {
         var request = ReceiveMessageRequest.builder()
             .queueUrl(queueUrl)
             .maxNumberOfMessages(10)
@@ -39,7 +44,7 @@ public class SqsListener {
             .map(ReceiveMessageResponse::messages)
             .flatMapMany(messages -> Flux.fromIterable(messages)
                 .concatWith(
-                    MonoUtils.applyDelay(Duration.ofSeconds(1), Message.class)
+                    MonoUtils.applyDelay(Duration.ofSeconds(1))
                 )
             )
             .publishOn(Schedulers.boundedElastic())
@@ -53,8 +58,13 @@ public class SqsListener {
                     })
             )
             .doOnComplete(() -> LOGGER.debug("Messages processed"))
-            .repeat()
+            .repeat(() -> active)
             .subscribe();
+    }
+
+    public void cancel() {
+        LOGGER.info("Stopping listener for queue {}", queueUrl);
+        this.active = false;
     }
 
     private Mono<Void> process(Message message) {

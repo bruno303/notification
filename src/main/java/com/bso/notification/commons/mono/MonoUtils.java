@@ -5,13 +5,18 @@ import reactor.core.scheduler.Schedulers;
 
 import java.time.Duration;
 
+import static com.bso.notification.commons.exception.ExceptionUtils.error;
+
 public final class MonoUtils {
     private MonoUtils() {}
 
-    public static <T> Mono<T> applyDelay(Duration duration, Class<T> clazz) {
+    public static <T> Mono<T> applyDelay(Duration duration) {
         return Mono
                 .delay(duration, Schedulers.boundedElastic())
-                .then()
-                .cast(clazz);
+                .then(Mono.empty());
+    }
+
+    public static <T> Mono<T> monoError(String messageFormat, Object... args) {
+        return Mono.error(error(messageFormat, args));
     }
 }

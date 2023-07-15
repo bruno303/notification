@@ -48,3 +48,7 @@ tasks.register("customBootRun", CustomSpringBootRunTask::class) {
 	mainClass.set("com.bso.notification.NotificationApplication")
 	classpath = project.sourceSets["main"].runtimeClasspath
 }
+
+tasks.bootRun {
+	jvmArgs = listOf("-Dspring.output.ansi.enabled=ALWAYS")
+}
