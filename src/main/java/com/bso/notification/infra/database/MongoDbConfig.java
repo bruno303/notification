@@ -54,7 +54,7 @@ public class MongoDbConfig extends AbstractReactiveMongoConfiguration {
                 Stream.of(new NotificationConfiguration(
                     Entity.PAYMENT,
                     Event.CREATED,
-                    "http://localhost:3000/payment/created",
+                    "http://localhost:8080/test/notification/PAYMENT/CREATED",
                     LocalDateTime.now(),
                     null
                 )).toList(),

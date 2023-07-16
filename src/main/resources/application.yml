@@ -8,6 +8,8 @@ app:
       configs:
         - queue: notification-send-notification
           handler: SendNotificationHandler
+  notification:
+    gateway: WEB_CLIENT
 
 logging:
   level:

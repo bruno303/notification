@@ -50,5 +50,5 @@ tasks.register("customBootRun", CustomSpringBootRunTask::class) {
 }
 
 tasks.bootRun {
-	jvmArgs = listOf("-Dspring.output.ansi.enabled=ALWAYS")
+	jvmArgs = listOf("-Dspring.profiles.active=local")
 }
