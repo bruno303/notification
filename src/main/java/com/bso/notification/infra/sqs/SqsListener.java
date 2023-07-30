@@ -19,16 +19,18 @@ public class SqsListener {
     private final SqsAsyncClient sqsAsyncClient;
     private final MessageHandler handler;
     private final String queueUrl;
+    private final String queueName;
     private Boolean active = true;
 
     public SqsListener(SqsAsyncClient sqsAsyncClient, MessageHandler handler, String queueName) {
         this.sqsAsyncClient = sqsAsyncClient;
         this.handler = handler;
+        this.queueName = queueName;
         this.queueUrl = getQueueUrl(queueName);
     }
 
     public void listen() {
-        LOGGER.info("Starting listener for queue {}", queueUrl);
+        LOGGER.info("Starting listener for queue {}", queueName);
         launchProducer();
     }
 
@@ -63,7 +65,7 @@ public class SqsListener {
     }
 
     public void cancel() {
-        LOGGER.info("Stopping listener for queue {}", queueUrl);
+        LOGGER.info("Stopping listener for queue {}", queueName);
         this.active = false;
     }
 

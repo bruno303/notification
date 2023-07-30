@@ -3,6 +3,7 @@ package com.bso.notification.application.notification.service;
 import com.bso.notification.application.client.repository.ClientRepository;
 import com.bso.notification.application.notification.command.SendNotificationCommand;
 import com.bso.notification.application.notification.gateway.NotificationGateway;
+import com.bso.notification.application.notification.metric.NotificationMetricRegistry;
 import com.bso.notification.domain.notification.entity.Client;
 import com.bso.notification.domain.notification.valueobject.NotificationConfiguration;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,7 @@ public class NotificationService {
     private static final Logger LOGGER = LoggerFactory.getLogger(NotificationService.class);
     private final ClientRepository clientRepository;
     private final NotificationGateway notificationGateway;
+    private final NotificationMetricRegistry notificationMetricRegistry;
 
     public Mono<Void> sendNotification(SendNotificationCommand command) {
         LOGGER.info(
@@ -56,6 +58,7 @@ public class NotificationService {
                 );
                 return notificationGateway.send(cfg.url(), command.data());
             })
+            .then(notificationMetricRegistry.incrementNotificationCounter())
             .doOnError(ex -> LOGGER.error("Error during notification", ex));
     }
 

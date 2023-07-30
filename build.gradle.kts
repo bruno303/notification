@@ -24,14 +24,21 @@ repositories {
 }
 
 object Version {
-	const val awsSdk = "2.20.56"
+	const val AWS_SDK = "2.20.56"
+	const val MICROMETER_PROMETHEUS = "1.11.2"
 }
 
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-mongodb-reactive")
 	implementation("org.springframework.boot:spring-boot-starter-webflux")
-	implementation(platform("software.amazon.awssdk:bom:${Version.awsSdk}"))
+
+	// AWS
+	implementation(platform("software.amazon.awssdk:bom:${Version.AWS_SDK}"))
 	implementation("software.amazon.awssdk:sqs")
+
+	// Monitoring
+	implementation("io.micrometer:micrometer-registry-prometheus:${Version.MICROMETER_PROMETHEUS}")
+	implementation("org.springframework.boot:spring-boot-starter-actuator")
 
 	compileOnly("org.projectlombok:lombok")
 	annotationProcessor("org.projectlombok:lombok")

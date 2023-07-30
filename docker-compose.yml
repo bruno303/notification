@@ -7,6 +7,16 @@ services:
     ports:
       - '27017:27017'
 
+  prometheus:
+    container_name: notification_prometheus
+    image: prom/prometheus:v2.46.0
+    ports:
+      - "9090:9090"
+    volumes:
+      - "./etc/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
   localstack:
     container_name: "notification_localstack"
     image: localstack/localstack:2.1.0

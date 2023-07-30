@@ -11,6 +11,15 @@ app:
   notification:
     gateway: WEB_CLIENT
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,info,prometheus"
+
+server:
+  shutdown: graceful
+
 logging:
   level:
     com.bso.notification.infra.sqs: INFO
