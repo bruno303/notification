@@ -1,10 +1,15 @@
+spring:
+  application:
+    name: not-fy
+    env: prod
+
 app:
   datasource:
     mongodb:
-      url: mongodb://localhost:27017/notification
+      url: ${MONGODB_URL}
   aws:
     sqs:
-      endpoint: ${SQS_ENDPOINT:http://localhost:4566}
+      endpoint: ${SQS_ENDPOINT}
       configs:
         - queue: notification-send-notification
           handler: SendNotificationHandler
@@ -12,6 +17,13 @@ app:
     gateway: WEB_CLIENT
 
 management:
+  zipkin:
+    tracing:
+      endpoint: ${ZIPKIN_URL}
+  tracing:
+    enabled: true
+    sampling:
+      probability: 1.0
   endpoints:
     web:
       exposure:
@@ -23,3 +35,7 @@ server:
 logging:
   level:
     com.bso.notification.infra.sqs: INFO
+  pattern:
+    level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
+  file:
+    name: logs/notification-prod.log

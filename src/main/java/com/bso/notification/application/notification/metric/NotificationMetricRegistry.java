@@ -10,8 +10,13 @@ import reactor.core.publisher.Mono;
 public class NotificationMetricRegistry {
     private final MetricRegistry metricRegistry;
     private static final String NOTIFICATION_COUNTER = "notification-counter";
+    private static final String NOTIFICATION_ERROR_COUNTER = "notification-error-counter";
 
     public Mono<Void> incrementNotificationCounter() {
         return metricRegistry.incrementMetric(NOTIFICATION_COUNTER);
+    }
+
+    public Mono<Void> incrementErrorCounter() {
+        return metricRegistry.incrementMetric(NOTIFICATION_ERROR_COUNTER);
     }
 }

@@ -1,4 +1,20 @@
 spring:
-  output:
-    ansi:
-      enabled: ALWAYS
+  application:
+    env: dev
+
+app:
+  datasource:
+    mongodb:
+      url: mongodb://localhost:27017/notification
+  aws:
+    sqs:
+      endpoint: http://localhost:4566
+
+management:
+  zipkin:
+    tracing:
+      endpoint: http://localhost:9411/api/v2/spans
+
+logging:
+  file:
+    name: logs/notification-dev.log

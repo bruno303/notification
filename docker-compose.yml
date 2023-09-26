@@ -6,6 +6,8 @@ services:
     image: mongo:6-jammy
     ports:
       - '27017:27017'
+    networks:
+      - notification
 
   prometheus:
     container_name: notification_prometheus
@@ -16,6 +18,8 @@ services:
       - "./etc/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml"
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    networks:
+      - notification
 
   localstack:
     container_name: "notification_localstack"
@@ -24,3 +28,50 @@ services:
       - "4566:4566"
     volumes:
       - "./etc/localstack/init-aws.sh:/etc/localstack/init/ready.d/init-aws.sh"
+    networks:
+      - notification
+
+  loki:
+    image: grafana/loki:2.8.0
+    container_name: notification_loki
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/local-config.yaml
+    networks:
+      - notification
+
+  promtail:
+    image: grafana/promtail:2.8.0
+    container_name: notification_promtail
+    volumes:
+      - /var/log:/var/log
+      - ${PWD}/etc/promtail/config.yml:/etc/promtail/config.yml
+      - ${PWD}/logs:/var/logs/notification/
+    command: -config.file=/etc/promtail/config.yml
+    networks:
+      - notification
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: notification_grafana
+    environment:
+      - GF_PATHS_PROVISIONING=/etc/grafana/provisioning
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+    volumes:
+      - ./etc/grafana/datasources.yml:/etc/grafana/provisioning/datasources/ds.yaml
+    ports:
+      - "3000:3000"
+    networks:
+      - notification
+
+  zipkin:
+    image: openzipkin/zipkin:2.24.3
+    container_name: notification_zipkin
+    ports:
+      - "9411:9411"
+    networks:
+      - notification
+
+networks:
+  notification:

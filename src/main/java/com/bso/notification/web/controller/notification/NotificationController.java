@@ -6,7 +6,10 @@ import com.bso.notification.domain.notification.enums.Entity;
 import com.bso.notification.domain.notification.enums.Event;
 import com.bso.notification.web.controller.notification.dto.SendNotificationRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
 import java.util.UUID;
@@ -16,11 +19,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class NotificationController {
     private final NotificationService notificationService;
-
-    @GetMapping("/hello")
-    public Mono<String> hello() {
-        return Mono.just("Hello World!");
-    }
 
     @PostMapping
     public Mono<Void> sendNotification(@RequestBody SendNotificationRequest body) {
